@@ -5,6 +5,8 @@
 void setupWiFi(const char* ssid, const char* password) 
 {
   Serial.println();
+  Serial.println(ssid);
+  Serial.println(password);
   Serial.print("Connecting to Access Point");
   WiFi.begin(ssid, password);                     // Connect to the provided wifi network
   
