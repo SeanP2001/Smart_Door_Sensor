@@ -11,4 +11,8 @@
 
 void setupWiFi(const char* ssid, const char* password);
 
+void setupWiFiAP(const char* ssid, IPAddress local_ip, IPAddress gateway, IPAddress subnet);
+
+bool isClientConnected();
+
 #endif // _CONNECT_WIFI_H_

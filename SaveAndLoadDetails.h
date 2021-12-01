@@ -11,6 +11,8 @@ void saveDetails(struct deviceDetails device);
 
 struct deviceDetails loadDetails();
 
+void resetDetails(); 
+
 void printDetails(struct deviceDetails device);
 
 

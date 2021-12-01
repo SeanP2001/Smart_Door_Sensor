@@ -11,6 +11,7 @@
 #include "SendEmail.h"
 #include "SaveAndLoadDetails.h"
 #include "RGBLED.h"
+#include "DeviceSetup.h"
 
 #include <ESP32Servo.h>  // only needed for tone
 
@@ -21,17 +22,23 @@ struct deviceDetails {
   char deviceName[30];
   char emailAdd[30];
   char userName[15];
-  bool setup;
+  bool isSetup;
 };
 
 deviceDetails device{
-  "Not Set",
-  "Not Set",
-  "Not Set",
-  "Not Set",
-  "Not Set",
+  "",
+  "",
+  "",
+  "",
+  "",
   false
 };
+
+// ----------------------------------------------------------------- W I F I   A C C E S S   P O I N T   D E T A I L S -----------------------------------------------------------------
+const char* wifiAPSSID = "S.P.U.D Smart System";
+IPAddress local_ip(192,168,1,1);
+IPAddress gateway(192,168,1,1);
+IPAddress subnet(255,255,255,0);
 
 // ------------------------------------------------------------------------------ E M A I L   A L E R T S ------------------------------------------------------------------------------
 const char* emailSubject = "Door Open";
@@ -80,9 +87,10 @@ void setup()
   Serial.begin(115200);                                       // start serial communication
 
   device = loadDetails();                                     // load the device details 
+
   printDetails(device);                                       // print the details which have been loaded
 
-  if (device.setup){                                          // if the device has been setup
+  if (device.isSetup){                                        // if the device has been setup
     setupWiFi(device.wifiSSID, device.wifiPassword);          // Connect to the WiFi
   }
 
@@ -96,15 +104,24 @@ void setup()
 // -------------------------------------------------------------------------------------- M A I N --------------------------------------------------------------------------------------
 void loop()
 {
-  if (!device.setup)                                                                      // If the device has not been setup
+// ------------------------------------------------------------------------------ I F   N O T   S E T U P ------------------------------------------------------------------------------
+  if (!device.isSetup)                                                                    // If the device has not been setup
   {
-    // Activate WiFi Network
-    // Wait for a connection
-    // Take the user to the Setup Portal, return 1 if successful
-    device.setup = true;                                                                  // Flag that the device has now been setup
-    // Save the device details  
+    setupWiFiAP(wifiAPSSID, local_ip, gateway, subnet);                                   // setup wifi access point
+
+    Serial.print("\nWaiting");
+     
+    while(!isClientConnected()){                                                          // Wait for a connection
+      Serial.print(".");
+      delay(200);
+    }
+    
+    device = getCredsViaWebAP();                                                          // once a device has connected, send the credentials web form and get the submission                                                     
+    saveDetails(device);                                                                  // Save the device details  
+    indicatorLED.flashLED(RGBLED::GREEN, 1000);                                           // flash green
   }
 
+// ---------------------------------------------------------------------------------- I F   S E T U P ----------------------------------------------------------------------------------
   else                                                                                    // If the device has been setup
   {  
     currentState = digitalRead(doorSwitchPin);                                            // Set the current state of the door based on the reading from the reed switch

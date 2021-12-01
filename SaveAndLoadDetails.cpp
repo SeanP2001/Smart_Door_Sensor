@@ -10,7 +10,7 @@ struct deviceDetails {
   char deviceName[30];
   char emailAdd[30];
   char userName[15];
-  bool setup;
+  bool isSetup;
 };
 
 
@@ -40,6 +40,26 @@ struct deviceDetails loadDetails()
   return readDetails;                        // return the details which have been loaded
 }  
 
+// ------------------------------------------------------------------------------- R E S E T   D E V I C E   D E T A I L S -------------------------------------------------------------------------------
+void resetDetails()       
+{ 
+  deviceDetails defaultDetails{             
+    "",
+    "",
+    "",
+    "",
+    "",
+    false
+  };
+  EEPROM.begin(EEPROM_SIZE);                 // initialise the EEPROM memory
+  
+  EEPROM.put(saveAddress, defaultDetails);   // save the device details
+
+  EEPROM.commit();                           // commit the changes
+
+  EEPROM.end();                              // release the RAM copy of the EEPROM contents
+}
+
 // ------------------------------------------------------------------------------- P R I N T   D E V I C E   D E T A I L S -------------------------------------------------------------------------------
 void printDetails(struct deviceDetails device)
 {
@@ -54,6 +74,9 @@ void printDetails(struct deviceDetails device)
   Serial.println( device.emailAdd );
   Serial.print("Your Name: ");
   Serial.println( device.userName );
-  Serial.println( "Setup: " );
-  Serial.print( device.setup );
+  Serial.print( "Setup: " );
+  if (device.isSetup)
+    Serial.println("Yes");
+  else
+    Serial.println("No");
 }
