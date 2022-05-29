@@ -63,7 +63,7 @@ bool emailAlert;                                            // a boolean variabl
 bool buzzerAlert;                                           // a boolean variable to store whether the buzzer is enabled or disabled
 
 // ------------------------------------------------------------------------- D O O R   S E N S O R   S E T U P -------------------------------------------------------------------------
-int doorSwitchPin = 19;                                     // door reed switch on pin 19
+int doorSwitchPin = 35;                                     // door reed switch on pin 19
 
 enum State {CLOSED, OPEN};                                  // the state of the door is either closed or open
 

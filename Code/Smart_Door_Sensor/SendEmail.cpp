@@ -7,8 +7,8 @@
 
 // --------------------------------------------------------------------------- B O T   E M A I L   D E T A I L S ---------------------------------------------------------------------------
 #define AUTHOR_NAME "SPUD Smart System"
-#define AUTHOR_EMAIL "ADD DEVICE EMAIL ADDRESS"
-#define AUTHOR_PASSWORD "ADD DEVICE EMAIL PASSWORD"
+#define AUTHOR_EMAIL "spudsmartsystem@gmail.com"
+#define AUTHOR_PASSWORD "UniProjectEmail2021"
 
 SMTPSession smtp;      // instantiate SMTP object
 
